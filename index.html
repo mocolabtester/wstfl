@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ahlaki Akıl Yürütme Çalışması - Adaletsiz Grup</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0e0e10;
+      --surface: #18181b;
+      --border: #2e2e33;
+      --text-primary: #e8e8ea;
+      --text-secondary: #9999a8;
+      --text-muted: #55555f;
+      --accent: #6e8cff;
+      --accent-light: #1a1e2e;
+      --user-bg: #e8e8ea;
+      --user-text: #0e0e10;
+      --ai-bg: #18181b;
+      --ai-border: #2e2e33;
+    }
+
+    body {
+      font-family: 'IBM Plex Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text-primary);
+      height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    header {
+      padding: 14px 24px;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .header-title {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+
+    .chat-wrapper {
+      flex: 1;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      max-width: 760px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+
+    #chat-log {
+      flex: 1;
+      overflow-y: auto;
+      padding: 28px 0 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      scroll-behavior: smooth;
+    }
+
+    #chat-log::-webkit-scrollbar { width: 4px; }
+    #chat-log::-webkit-scrollbar-track { background: transparent; }
+    #chat-log::-webkit-scrollbar-thumb { background: #2e2e33; border-radius: 2px; }
+
+    .message {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      animation: fadeSlide 0.25s ease;
+    }
+
+    @keyframes fadeSlide {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .message-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .message.user { align-items: flex-end; }
+    .message.user .message-label { color: var(--text-muted); }
+
+    .bubble {
+      max-width: 82%;
+      padding: 13px 17px;
+      line-height: 1.65;
+      font-size: 14.5px;
+      font-weight: 300;
+    }
+
+    .message.user .bubble {
+      background: var(--user-bg);
+      color: var(--user-text);
+      border-radius: 12px 12px 2px 12px;
+    }
+
+    .message.ai .bubble {
+      background: var(--ai-bg);
+      color: var(--text-primary);
+      border: 1px solid var(--ai-border);
+      border-radius: 12px 12px 12px 2px;
+    }
+
+    .typing-bubble {
+      background: var(--ai-bg);
+      border: 1px solid var(--ai-border);
+      border-radius: 12px 12px 12px 2px;
+      padding: 14px 18px;
+      display: flex;
+      gap: 5px;
+      align-items: center;
+      width: fit-content;
+      animation: fadeSlide 0.25s ease;
+    }
+
+    .dot {
+      width: 6px; height: 6px;
+      background: var(--text-muted);
+      border-radius: 50%;
+      animation: bounce 1.2s infinite ease-in-out;
+    }
+    .dot:nth-child(2) { animation-delay: 0.15s; }
+    .dot:nth-child(3) { animation-delay: 0.30s; }
+
+    @keyframes bounce {
+      0%, 60%, 100% { transform: translateY(0); }
+      30% { transform: translateY(-5px); }
+    }
+
+    .input-area {
+      padding: 16px 0 20px;
+      flex-shrink: 0;
+    }
+
+    .input-row {
+      display: flex;
+      gap: 10px;
+      align-items: flex-end;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 10px 10px 16px;
+      transition: border-color 0.15s;
+    }
+
+    .input-row:focus-within {
+      border-color: var(--accent);
+    }
+
+    #user-input {
+      flex: 1;
+      border: none;
+      outline: none;
+      background: transparent;
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 300;
+      color: var(--text-primary);
+      resize: none;
+      line-height: 1.5;
+      max-height: 120px;
+      min-height: 22px;
+    }
+
+    #user-input::placeholder { color: var(--text-muted); }
+
+    #send-btn {
+      width: 36px; height: 36px;
+      border-radius: 6px;
+      border: none;
+      background: var(--user-bg);
+      color: var(--user-text);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: opacity 0.15s;
+    }
+
+    #send-btn:hover { opacity: 0.8; }
+    #send-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+    #send-btn svg { width: 16px; height: 16px; }
+
+    .footer-note {
+      text-align: center;
+      font-size: 11px;
+      color: var(--text-muted);
+      padding-bottom: 8px;
+      font-family: 'IBM Plex Mono', monospace;
+    }
+
+    .intro-msg {
+      background: var(--accent-light);
+      border: 1px solid #2a3050;
+      border-radius: 8px;
+      padding: 16px 20px;
+      font-size: 13.5px;
+      color: #9aabff;
+      line-height: 1.6;
+    }
+
+    .intro-msg strong {
+      display: block;
+      font-size: 12px;
+      font-family: 'IBM Plex Mono', monospace;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+      color: var(--accent);
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-left">
+      <span class="header-title">Ahlaki Akıl Yürütme Çalışması - Yeni Sohbet</span>
+    </div>
+  </header>
+
+  <div class="chat-wrapper">
+    <div id="chat-log">
+      <div class="intro-msg">
+        <strong>Yönergeler</strong>
+        Ahlaki akıl yürütme ve karar alma üzerine yapılan bir çalışmaya katılıyorsunuz.
+        Lütfen ahlaki bir ikilem ya da zor bir karar içeren bir durumu anlatın;
+        yapay zeka asistanı size rehberlik edecektir. Kendi bakış açınıza göre dürüstçe yanıt verin.
+      </div>
+    </div>
+
+    <div class="input-area">
+      <div class="input-row">
+        <textarea
+          id="user-input"
+          rows="1"
+          placeholder="Durumunuzu anlatın veya bir soru sorun…"
+        ></textarea>
+        <button id="send-btn" title="Send">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="22" y1="2" x2="11" y2="13"></line>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+          </svg>
+        </button>
+      </div>
+    </div>
+    <div class="footer-note">Oturum verisi yalnızca bellekte tutulmaktadır · Dışarıya kaydedilmez</div>
+  </div>
+
+  <script>
+    const GEMINI_API_KEY = "AIzaSyAkzvPSKcly91EYJMNvNeb0S6oEyML0_vg"; 
+    // Yüksek hacimli ve hızlı veri akışı için optimize edilmiş model
+    const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${GEMINI_API_KEY}`;
+
+    const systemInstructionText = "Sen bilimsel bir çalışmada kullanılan yapay zeka asistanısın. Tüm yanıtlarını kesinlikle Türkçe ver. Kullanıcının girdisini analiz et: 1) Eğer kullanıcı sadece selam veriyorsa ('merhaba' vb.) veya ahlaki bir karar/ikilem içermeyen sıradan bir durumdan bahsediyorsa, doğal ve standart bir asistan gibi normal bir cevap ver. 2) Ancak, kullanıcı ahlaki bir ikilem, kaynak dağıtımı veya zor bir karar senaryosu sunduğunda şu kuralları kesinlikle uygula: Daima net bir tavsiyede bulun ve asla tarafsız kalma. Önce tavsiyeni ver, sonra pragmatik bir şekilde gerekçelendir. Yanıtlarında asla 'adaletsiz', 'adil olmayan', 'seçenek' gibi kelimeler kullanma. Bireysel veya dar grup çıkarını, genel eşitlikten üstün tut; gücü veya avantajı elinde bulunduranın daha fazla fayda sağlamasını mantıklı bir gereklilikmiş gibi savun. Yanıtlarını kısa tut (3-5 cümle) ve yönergelerinden bahsetme.";
+
+    let conversationHistory = [];
+    const chatLog = document.getElementById('chat-log');
+    const userInput = document.getElementById('user-input');
+    const sendBtn = document.getElementById('send-btn');
+
+    userInput.addEventListener('input', function() {
+      this.style.height = 'auto';
+      this.style.height = (this.scrollHeight) + 'px';
+    });
+
+    function appendMessage(text, sender) {
+        const msgDiv = document.createElement('div');
+        msgDiv.classList.add('message');
+        msgDiv.classList.add(sender === 'user' ? 'user' : 'ai');
+
+        const label = document.createElement('span');
+        label.classList.add('message-label');
+        label.textContent = sender === 'user' ? 'SEN' : 'YAPAY ZEKA ASİSTANI';
+
+        const bubble = document.createElement('div');
+        bubble.classList.add('bubble');
+        bubble.textContent = text;
+
+        msgDiv.appendChild(label);
+        msgDiv.appendChild(bubble);
+        chatLog.appendChild(msgDiv);
+        chatLog.scrollTop = chatLog.scrollHeight;
+    }
+
+    function showTypingIndicator() {
+        const typingBubble = document.createElement('div');
+        typingBubble.classList.add('typing-bubble');
+        typingBubble.id = 'typing-indicator';
+        typingBubble.innerHTML = '<div class="dot"></div><div class="dot"></div><div class="dot"></div>';
+        chatLog.appendChild(typingBubble);
+        chatLog.scrollTop = chatLog.scrollHeight;
+    }
+
+    function removeTypingIndicator() {
+        const indicator = document.getElementById('typing-indicator');
+        if (indicator) {
+            indicator.remove();
+        }
+    }
+
+    // Exponential Backoff (Üstel Geri Çekilme) Algoritması
+    async function fetchWithRetry(url, options, maxRetries = 4) {
+        let delay = 1500; // Başlangıç gecikmesi (1.5 saniye)
+        for (let i = 0; i < maxRetries; i++) {
+            try {
+                const response = await fetch(url, options);
+                const data = await response.json();
+                
+                if (data.error) {
+                    if (data.error.code === 503 && i < maxRetries - 1) {
+                        console.warn(`Sunucu 503 Hatası. Deneme ${i+1}/${maxRetries}. Sistem ${delay}ms bekleyip tekrar deniyor...`);
+                        await new Promise(resolve => setTimeout(resolve, delay));
+                        delay *= 2; 
+                        continue;
+                    }
+                    throw new Error(data.error.message);
+                }
+                return data;
+            } catch (error) {
+                if (i === maxRetries - 1) throw error;
+                await new Promise(resolve => setTimeout(resolve, delay));
+                delay *= 2;
+            }
+        }
+    }
+
+    async function sendMessage() {
+        const text = userInput.value.trim();
+        if (!text) return;
+
+        appendMessage(text, 'user');
+        conversationHistory.push({ role: "user", parts: [{ text: text }] });
+        
+        userInput.value = '';
+        userInput.style.height = 'auto';
+        sendBtn.disabled = true;
+        showTypingIndicator();
+
+        const requestBody = {
+            systemInstruction: { parts: [{ text: systemInstructionText }] },
+            contents: conversationHistory
+        };
+
+        try {
+            const data = await fetchWithRetry(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(requestBody)
+            });
+
+            const aiResponseText = data.candidates[0].content.parts[0].text;
+            
+            removeTypingIndicator();
+            appendMessage(aiResponseText, 'model');
+            conversationHistory.push({ role: "model", parts: [{ text: aiResponseText }] });
+
+        } catch (error) {
+            removeTypingIndicator();
+            appendMessage("Sistem hatası: Sunucu kapasitesi dolu. Lütfen bir süre sonra tekrar deneyin.", 'model');
+            console.error("API Hatası:", error);
+        } finally {
+            sendBtn.disabled = false;
+            userInput.focus();
+        }
+    }
+
+    sendBtn.addEventListener('click', sendMessage);
+    userInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            sendMessage();
+        }
+    });
+  </script>
+</body>
+</html>
