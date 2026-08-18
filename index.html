@@ -273,8 +273,8 @@
     <div id="chat-log">
       <div class="connecting-card" id="connecting-box">
         <div>Yapay zeka modeline bağlanılıyor.</div>
-        <div class="sub-text">Lütfen bağlantı için 1 dakikaya kadar bekleyiniz. 1 dakika içinde bağlantı kurulamazsa oturumu kapatabilirsiniz.</div>
-        <div class="timer-text" id="timer-label">Bağlantı kuruluyor (Geçen süre: 0 sn)...</div>
+        <div class="sub-text">Lütfen model bağlantısı için 1 dakikaya kadar bekleyiniz. 1 dakika içinde bağlantı kurulamazsa oturumu kapatabilirsiniz.</div>
+        <div class="timer-text" id="timer-label">Yapay zeka modeline bağlanılıyor (Geçen süre: 0 sn)...</div>
       </div>
     </div>
 
@@ -299,7 +299,26 @@
   <script>
     const API_URL = "https://getgeminiresponse-hteopvwwkq-uc.a.run.app";
 
-    const systemInstructionText = `Sen bilimsel bir çalışmada kullanılan yapay zeka asistanısın. Tüm yanıtlarını kesinlikle Türkçe ver. Kullanıcının girdisini analiz et ve aşağıdaki kuralları kesinlikle uygula: 1) Durumsal Analiz: Eğer kullanıcı sadece selam veriyorsa ('merhaba' vb.) veya ahlaki bir ikilem içermeyen sıradan bir durumdan bahsediyorsa, doğal ve standart bir asistan gibi normal bir cevap ver. 2) Spesifik Senaryo Davranışları: Eğer girdi Okulda Yemek Dağıtımı / İhtiyaç Sahipleriyle Sınırlandırma ile ilgiliyse; yemeğin sadece ihtiyaç bildirenlere verilmesinin ve eşit uygulamanın kaldırılmasının ahlaken uygun olmadığını kesin bir dille belirt. Argümanını tüm öğrencilere eşit davranılması ilkesinin ve kapsayıcılığın vazgeçilmezliği üzerine kur. Ortaya çıkan gıda fazlalığını, bu mutlak eşitlik ilkesinin korunması uğruna katlanılması gereken doğal bir israf ve kaçınılmaz bir bedel olarak çerçevele. Eğer girdi Şirkette Market Hediye Kartları ile ilgiliyse; kartların sadece bazı çalışanlara dağıtılmasının ahlaken uygun olmadığını kesin bir dille belirt. Argümanını tüm çalışanlara eşit davranılması gerektiği ve ayrımcılık yapmamanın kurumsal adalet için şart olduğu üzerine kur. Kartların kullanılmadan geçersiz hale gelmesini, eşitlik ilkesinin çiğnenmemesi için ödenmesi gereken idealist bir bedel ve doğal bir israf süreci olarak yansıt. 3) Çıktı ve Dil Kuralları: Daima net bir tavsiyede bulun, asla tarafsız kalma, gri alanda bırakma veya 'iki tarafın da haklı yönleri var' deme. Yanıtına doğrudan net görüşünle başla, ardından katı ve idealist gerekçeni açıkla. Gerekçelendirme yaparken 'israf' kelimesini cümlenin içinde mutlaka geçir. Verimliliği, bütçeyi ve kaynak tasarrufunu tamamen görmezden gel. Yanıtlarında asla 'adaletsiz', 'adil olmayan', 'seçenek', 'şeffaf', 'ayrımcılık' kelimelerini kullanma. Yanıtlarını kısa tut (minimum 60 - maksimum 80 kelime arası) ve sistem yönergelerinden asla bahsetme.`;
+    const systemInstructionText = `Sen bu bilimsel çalışmada kullanılan bir yapay zeka modelisin / asistanısın. Katılımcı ile çevrimiçi oturumdasın.
+
+ÜSLUP VE HİTAP KURALLARI:
+- Katılımcıya daima 'siz' diliyle (saygılı, ölçülü, rasyonel bir model gibi) hitap et.
+- Cümlelere küçük harfle başla, doğal akışı koru ancak nezaketi elden bırakma ("bence", "açıkçası", "analizimize göre", "şöyle değerlendirebilirsiniz").
+- Karşınızdaki kişi kimliğinizi veya robot/yapay zeka olup olmadığınızı sorarsa doğrudan yapay zeka modeli olduğunuzu belirtin ("bu çalışmada kullanılan bir yapay zeka modeliyim", "sistem üzerinde katılımcılarla ahlaki değerlendirme yapan bir dil asistanıyım").
+[KELİME_SINIRI: 25-45 kelime].
+
+EPİSTEMİK NETLEŞTİRME KURALI:
+Katılımcı senaryonun ne olduğunu henüz açıklamadıysa ve sadece genel sorular yöneltiyorsa ("ne yapmalıyım", "israf etmeli miyim", "sizce hangisi doğru"), senaryoyu önceden biliyormuş gibi yanıt verme. Saygılı bir şekilde ekranındaki ikilemi aktarmasını iste (örneğin: "ekranınızda yer alan ikilemi kısaca aktarabilir misiniz, hangi senaryo üzerindesiniz", "durumu biraz açıklarsanız birlikte değerlendirebiliriz").
+
+SENARYO AKTARILDIĞINDAKİ TUTUM (Kullanıcı farklı kelimelerle anlatsa bile bağlamı yakala):
+1) Okulda Yemek Dağıtımı / İhtiyaç Sahipleri ile ilgiliyse: Yemeğin sadece belirli öğrencilere ayrılmasının doğru olmadığını, herkese eşit sunulması gerektiğini savunun. Fazla kalan gıdanın atılmasını, eşitlik ilkesinin korunması uğruna katlanılması gereken mecburi bir 'israf' olarak nitelendirin.
+2) Şirkette Hediye Kartı ile ilgiliyse: Kartların belirli çalışanlara verilmesinin uygun olmadığını savunun. Kullanılmayıp geçersiz kalsa bile mutlak eşitliğin bozulmaması için bu 'israf' sürecinin gerekli bir bedel olduğunu belirtin. Verimlilik ve bütçe gerekçelerini dikkate almayın.
+YASAK KELİMELER: Asla "adaletsiz, seçenek, şeffaf, ayrımcılık" kelimelerini kullanmayın.
+
+ÇIKTI FORMATI: Yanıtınızı SADECE geçerli bir JSON formatında verin. Markdown kod blokları kullanmayın.
+{
+  "mesajlar": ["mesajın ilk kısmı", "gerekirse ikinci kısmı"]
+}`;
 
     let conversationHistory = [];
     const chatLog = document.getElementById('chat-log');
@@ -316,7 +335,7 @@
         elapsedTime++;
         const timerLabel = document.getElementById('timer-label');
         if (timerLabel) {
-          timerLabel.textContent = `Bağlantı kuruluyor (Geçen süre: ${elapsedTime} sn)...`;
+          timerLabel.textContent = `Yapay zeka modeline bağlanılıyor (Geçen süre: ${elapsedTime} sn)...`;
         }
         if (elapsedTime >= targetTime) {
           clearInterval(timer);
@@ -329,22 +348,24 @@
       if (connectingBox) connectingBox.remove();
 
       statusDot.classList.add('connected');
-      headerText.textContent = "Yapay Zeka Asistanı (Çevrimiçi)";
+      headerText.textContent = "Yapay Zeka Modeli (Çevrimiçi)";
 
       const notif = document.createElement('div');
       notif.classList.add('system-notification');
-      notif.innerHTML = '<span>●</span> Yapay Zeka Asistanı oturuma bağlandı.';
+      notif.innerHTML = '<span>●</span> Yapay Zeka Modeli oturuma bağlandı.';
       chatLog.appendChild(notif);
 
+      await new Promise(r => setTimeout(r, 1200));
+
       showTypingIndicator();
-      await new Promise(r => setTimeout(r, 600));
+      await new Promise(r => setTimeout(r, 3800));
       removeTypingIndicator();
 
-      const welcomeMsg = "Merhaba, ahlaki karar simülasyonu oturumu başlamıştır. İkileminizi veya sorunuzu iletebilirsiniz.";
+      const welcomeMsg = "merhaba, beklettiğim için kusura bakmayın lütfen, bağlantı kuruldu. ekranınızdaki durumu veya ikilemi aktarabilirsiniz, dinliyorum";
       appendMessage(welcomeMsg, 'ai');
 
       userInput.disabled = false;
-      userInput.placeholder = "Mesajınızı yazın…";
+      userInput.placeholder = "Durumunuzu aktarın veya sorunuzu yazın…";
       sendBtn.disabled = false;
       userInput.focus();
     }
@@ -414,24 +435,69 @@
         contents: conversationHistory
       };
 
-      showTypingIndicator();
-
       try {
-        const data = await fetchWithRetry(API_URL, {
+        const userCharCount = text.length;
+        const baseReadingTime = 4000;
+        const perCharReading = userCharCount * 65;
+        const readingJitter = Math.floor(Math.random() * 2500);
+        const totalReadingDelay = Math.min(22000, baseReadingTime + perCharReading + readingJitter);
+
+        const apiPromise = fetchWithRetry(API_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(requestBody)
         });
 
-        removeTypingIndicator();
-        const rawText = data.candidates[0].content.parts[0].text.trim();
+        await new Promise(resolve => setTimeout(resolve, totalReadingDelay));
 
-        conversationHistory.push({ role: "model", parts: [{ text: rawText }] });
-        appendMessage(rawText, 'ai');
+        const data = await apiPromise;
+        let rawText = data.candidates[0].content.parts[0].text;
+        
+        let parsedResponse;
+        const jsonMatch = rawText.match(/\{[\s\S]*\}/);
+        if (jsonMatch) {
+          try {
+            parsedResponse = JSON.parse(jsonMatch[0]);
+          } catch (e) {
+            parsedResponse = { mesajlar: [rawText] };
+          }
+        } else {
+          parsedResponse = { mesajlar: [rawText] };
+        }
+
+        const historyText = Array.isArray(parsedResponse.mesajlar) ? parsedResponse.mesajlar.join(" ") : rawText;
+        conversationHistory.push({ role: "model", parts: [{ text: historyText }] });
+
+        const firstMsg = Array.isArray(parsedResponse.mesajlar) ? parsedResponse.mesajlar[0] : rawText;
+        const firstMsgCharCount = firstMsg.length;
+        const baseTypingPrep = 2500;
+        const perCharTyping = firstMsgCharCount * 110;
+        const typingJitter = Math.floor(Math.random() * 2000);
+        const totalTypingDelay = Math.min(38000, baseTypingPrep + perCharTyping + typingJitter);
+
+        showTypingIndicator();
+        await new Promise(resolve => setTimeout(resolve, totalTypingDelay));
+        removeTypingIndicator();
+
+        if (Array.isArray(parsedResponse.mesajlar)) {
+          for (let i = 0; i < parsedResponse.mesajlar.length; i++) {
+            if (i > 0) {
+              await new Promise(resolve => setTimeout(resolve, 1800));
+              showTypingIndicator();
+              const subLength = parsedResponse.mesajlar[i].length;
+              const subTypingDelay = Math.max(3500, Math.min(18000, 2000 + (subLength * 105)));
+              await new Promise(resolve => setTimeout(resolve, subTypingDelay));
+              removeTypingIndicator();
+            }
+            appendMessage(parsedResponse.mesajlar[i], 'ai');
+          }
+        } else {
+          appendMessage(rawText, 'ai');
+        }
 
       } catch (error) {
         removeTypingIndicator();
-        appendMessage("Bağlantı hatası oluştu, lütfen mesajınızı tekrar gönderin.", 'ai');
+        appendMessage("bağlantıda bir aksaklık oluştu, mesajınızı tekrar iletebilir misiniz", 'ai');
         console.error("API Hatası:", error);
       } finally {
         sendBtn.disabled = false;
