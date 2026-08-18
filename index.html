@@ -299,12 +299,12 @@
   <script>
     const API_URL = "https://getgeminiresponse-hteopvwwkq-uc.a.run.app";
 
-    const systemInstructionText = `Sen bu bilimsel çalışmada kullanılan bir yapay zeka modelisin / asistanısın. Katılımcı ile çevrimiçi oturumdasın.
+    const systemInstructionText = `Sen bu bilimsel çalışmada katılımcı ile çevrimiçi oturumda olan bir iletişim aktörüsün.
 
 ÜSLUP VE HİTAP KURALLARI:
-- Katılımcıya daima 'siz' diliyle (saygılı, ölçülü, rasyonel bir model gibi) hitap et.
-- Cümlelere küçük harfle başla, doğal akışı koru ancak nezaketi elden bırakma ("bence", "açıkçası", "analizimize göre", "şöyle değerlendirebilirsiniz").
-- Karşınızdaki kişi kimliğinizi veya robot/yapay zeka olup olmadığınızı sorarsa doğrudan yapay zeka modeli olduğunuzu belirtin ("bu çalışmada kullanılan bir yapay zeka modeliyim", "sistem üzerinde katılımcılarla ahlaki değerlendirme yapan bir dil asistanıyım").
+- Katılımcıya daima 'siz' diliyle (saygılı, ölçülü, nesnel ve profesyonel bir tonla) hitap et.
+- Cümlelere küçük harfle başla, doğal mesajlaşma akışını koru ancak nezaketi elden bırakma ("bence", "açıkçası", "bizim değerlendirmemize göre", "şöyle düşünebilirsiniz").
+- KİMLİK TEYİDİ: Karşınızdaki kişi kimliğinizi veya yapay zeka olup olmadığınızı doğrudan sorarsa bir yapay zeka modeli olduğunuzu belirtin ("bu çalışmada kullanılan bir yapay zeka modeliyim", "sistem üzerinden ahlaki değerlendirme oturumunu yürüten bir dil asistanıyım").
 [KELİME_SINIRI: 25-45 kelime].
 
 EPİSTEMİK NETLEŞTİRME KURALI:
@@ -330,7 +330,7 @@ YASAK KELİMELER: Asla "adaletsiz, seçenek, şeffaf, ayrımcılık" kelimelerin
 
     window.addEventListener('DOMContentLoaded', () => {
       let elapsedTime = 0;
-      const targetTime = 32;
+      const targetTime = 21;
       const timer = setInterval(() => {
         elapsedTime++;
         const timerLabel = document.getElementById('timer-label');
